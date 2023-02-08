@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import ABI from '../abis/smart_contract.json';
 import { getBalanceToken } from 'src/utils/getBalanceToken';
 import { getBalanceInUSDT } from 'src/utils/getBalanceInUSDT';
+import { Cache } from 'cache-manager';
 
 const networks = {
   eth_mainnet: 'https://eth-rpc.gateway.pokt.network',
@@ -17,7 +18,7 @@ const networks = {
 
 @Injectable()
 export class TokensService {
-  constructor() {}
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   async getBalance(
     network: string,
@@ -35,7 +36,6 @@ export class TokensService {
 
     console.log('Balance after: ', balance);
     console.log('Symbol: ', symbol);
-
     return { balance, symbol };
   }
 
@@ -44,7 +44,6 @@ export class TokensService {
     tokenAddress: string,
     walletAddress: string,
   ) {
-
     const { balance, symbol } = await this.getBalance(
       network,
       tokenAddress,

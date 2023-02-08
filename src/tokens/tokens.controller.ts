@@ -1,4 +1,12 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  CacheKey,
+  CacheTTL,
+  Controller,
+  Get,
+  Param,
+  UseInterceptors,
+  CacheInterceptor,
+} from '@nestjs/common';
 import { TokensService } from './tokens.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
@@ -7,7 +15,9 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class TokensController {
   constructor(private tokensService: TokensService) {}
 
+  @UseInterceptors(CacheInterceptor)
   @Get('balance/:network/:tokenAddress/:walletAddress')
+  @CacheTTL(300) //5 minutes = 300 secs
   async getBalance(
     @Param('network') network: string,
     @Param('tokenAddress') tokenAddress: string,
@@ -21,7 +31,9 @@ export class TokensController {
     return { balance, symbol };
   }
 
+  @UseInterceptors(CacheInterceptor)
   @Get('balanceUSDT/:network/:tokenAddress/:walletAddress')
+  @CacheTTL(300) //5 minutes = 300 secs
   async getBalanceInUSDT(
     @Param('network') network: string,
     @Param('tokenAddress') tokenAddress: string,
