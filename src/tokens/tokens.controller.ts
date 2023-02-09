@@ -46,4 +46,14 @@ export class TokensController {
     );
     return { balanceInUSDT };
   }
+
+  @UseInterceptors(CacheInterceptor)
+  @Get('coinBalances/:walletAddress')
+  @CacheTTL(300) //5 minutes = 300 secs
+  async getCoinBalances(
+    @Param('walletAddress') walletAddress: string,
+  ) {
+    return await this.tokensService.getCoinBalances(walletAddress);
+  }
+
 }

@@ -54,4 +54,24 @@ export class TokensService {
     console.log('Balance in USDT: ', balanceInUSDT);
     return balanceInUSDT;
   }
+
+  async getCoinBalances(walletAddress: string) {
+    const web3Eth = await new Web3(networks['eth_mainnet']);
+    let balETH = await web3Eth.eth.getBalance(walletAddress);
+    balETH = web3Eth.utils.fromWei(balETH);
+
+    const web3BNB = await new Web3(networks['bsc']);
+    let balBNB = await web3BNB.eth.getBalance(walletAddress);
+    balBNB = web3Eth.utils.fromWei(balBNB);
+
+    const web3MATIC = await new Web3(networks['polygon']);
+    let balMATIC = await web3MATIC.eth.getBalance(walletAddress);
+    balMATIC = web3Eth.utils.fromWei(balMATIC);
+
+    console.log('Balance on Ethereum: ', balETH);
+    console.log('Balance on Binance: ', balBNB);
+    console.log('Balance on Polygon: ', balMATIC);
+
+    return { ethereum: balETH, binance: balBNB, polygon: balMATIC };
+  }
 }
